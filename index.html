@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pour Josephine 🐱</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500;1,600&family=Manrope:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--nuit:#1a0b2e;--prune:#3a1450;--rose:#ff5d8f;--pivoine:#ff8fab;--champagne:#f9e4d4;--serif:'Cormorant Garamond',Georgia,serif;--sans:'Manrope',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{background:var(--nuit);color:var(--champagne);font-family:var(--sans);line-height:1.7;overflow-x:hidden;-webkit-tap-highlight-color:transparent}
+#scene{position:fixed;inset:0;z-index:0;width:100%;height:100%;display:block;touch-action:pan-y}
+main{position:relative;z-index:1;pointer-events:none}
+.verre,button,.toast{pointer-events:auto}
+section{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding:max(2rem,env(safe-area-inset-top)) 1.3rem max(2rem,env(safe-area-inset-bottom));max-width:34rem;margin:0 auto}
+.hero{align-items:center;text-align:center;justify-content:space-between;padding-top:9vh;padding-bottom:6vh}
+h1{font-family:var(--serif);font-weight:600;font-style:italic;font-size:clamp(3.2rem,16vw,6rem);line-height:1;text-shadow:0 0 40px rgba(255,93,143,.55)}
+.hint{font-size:1rem;color:var(--pivoine);min-height:3.2em}
+h2{font-family:var(--serif);font-weight:500;font-size:clamp(1.9rem,8vw,2.7rem);line-height:1.15;margin-bottom:1rem}
+p{font-size:1.06rem;max-width:30rem;margin-bottom:1rem}
+.verre{background:rgba(58,20,80,.5);border:1px solid rgba(255,143,171,.25);border-radius:1.4rem;padding:1.6rem 1.4rem;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+button{font:inherit;font-weight:500;color:var(--nuit);background:linear-gradient(135deg,var(--pivoine),var(--rose));border:0;border-radius:999px;padding:.8rem 1.4rem;cursor:pointer;box-shadow:0 8px 30px rgba(255,93,143,.35)}
+button:active{transform:scale(.96)}
+button:focus-visible{outline:3px solid var(--champagne);outline-offset:3px}
+.jouets{display:flex;flex-wrap:wrap;gap:.7rem}
+.carte{display:block;width:100%;height:7.6rem;margin:.6rem 0;padding:0;background:none;box-shadow:none;border-radius:1.1rem;color:var(--champagne);perspective:900px}
+.in{position:relative;display:block;width:100%;height:100%;transition:transform .7s;transform-style:preserve-3d}
+.carte.tourne .in{transform:rotateY(180deg)}
+.f{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:.8rem 1rem;text-align:center;border-radius:1.1rem;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:1px solid rgba(255,143,171,.35);font-size:1.02rem;line-height:1.45}
+.avant{background:rgba(255,93,143,.16);font-size:1.15rem}
+.avant b{font-size:2rem;font-weight:400}
+.arriere{background:rgba(249,228,212,.12);transform:rotateY(180deg);font-family:var(--serif);font-style:italic;font-size:1.25rem}
+#lettre{max-height:0;overflow:hidden;opacity:0;transition:max-height 1s ease,opacity 1s}
+#lettre.ouverte{max-height:60rem;opacity:1;margin-top:1.2rem}
+.signature{font-family:var(--serif);font-style:italic;font-size:1.6rem;color:var(--pivoine)}
+.toast{position:fixed;left:50%;bottom:max(1rem,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:5;background:rgba(26,11,46,.85);border:1px solid rgba(255,143,171,.4);padding:.5rem 1rem;border-radius:999px;font-size:.95rem;white-space:nowrap;pointer-events:none}
+.fl{position:fixed;z-index:4;pointer-events:none;font-size:1.6rem;animation:monte 1.6s ease-out forwards}
+@keyframes monte{from{opacity:1;transform:translate(0,0) scale(.6)}to{opacity:0;transform:translate(var(--dx),-170px) scale(1.4) rotate(var(--r))}}
+@keyframes pluie{from{transform:translateY(-10vh) rotate(0)}to{transform:translateY(112vh) rotate(360deg)}}
+.pl{position:fixed;top:0;z-index:4;pointer-events:none;animation:pluie linear forwards}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.in,#lettre{transition:none}.fl,.pl{display:none}}
+</style>
+</head>
+<body>
+<canvas id="scene" aria-label="Un petit chat en 3D et un cœur"></canvas>
+<main>
+  <section class="hero">
+    <h1>Josephine</h1>
+    <p class="hint" id="hint">Dis bonjour au chat 🐾<br>Touche-le, caresse-le, regarde-le te suivre</p>
+  </section>
+
+  <section>
+    <div class="verre">
+      <h2>Ce site n’existe que pour toi.</h2>
+      <p>Un petit coin d’internet avec un chat qui t’attend, parce que tu mérites plein de douceur.</p>
+      <p>Descends, il y a des surprises.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="verre">
+      <h2>Les jouets du chat</h2>
+      <div class="jouets">
+        <button data-j="ronron">🐱 Ronronner</button>
+        <button data-j="coeurs">💗 Pluie de cœurs</button>
+        <button data-j="chats">🐈 Pluie de chats</button>
+        <button data-j="saut">🧶 Faire sauter</button>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="verre">
+      <h2>Retourne les cartes</h2>
+      <button class="carte"><span class="in"><span class="f avant"><b>🐾</b>Pourquoi je t’aime</span><span class="f arriere">Ton sourire change toute ma journée.</span></span></button>
+      <button class="carte"><span class="in"><span class="f avant"><b>😻</b>Un truc que tu fais</span><span class="f arriere">Tu craques devant chaque chat que tu croises.</span></span></button>
+      <button class="carte"><span class="in"><span class="f avant"><b>💌</b>Ce que je veux</span><span class="f arriere">Plein de câlins, de rires et de moments avec toi.</span></span></button>
+    </div>
+  </section>
+
+  <section>
+    <div class="verre">
+      <h2>J’ai quelque chose à te dire</h2>
+      <button id="ouvrir" aria-expanded="false" aria-controls="lettre">Ouvrir la lettre</button>
+      <div id="lettre" role="region" aria-label="Lettre pour Josephine">
+        <p id="lt" data-texte="Josephine, je suis tellement heureux de t’avoir dans ma vie. Merci d’être là, merci d’être toi. Tu es ma personne préférée, avec tous les chats du monde juste derrière toi. Je t’aime."></p>
+        <p class="signature">Pour toujours, ton amoureux 🐾</p>
+      </div>
+    </div>
+  </section>
+</main>
+<div class="toast" id="toast" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+var reduit=matchMedia('(prefers-reduced-motion: reduce)').matches;
+var $=function(s){return document.querySelector(s)};
+var R=new THREE.WebGLRenderer({canvas:$('#scene'),antialias:true,alpha:true});
+R.setPixelRatio(Math.min(devicePixelRatio,2));
+var S=new THREE.Scene(); S.fog=new THREE.FogExp2(0x1a0b2e,.04);
+var C=new THREE.PerspectiveCamera(50,1,.1,100); C.position.set(0,0,10);
+S.add(new THREE.AmbientLight(0xffd2e0,.7));
+var l1=new THREE.PointLight(0xff5d8f,2.4,40);l1.position.set(5,4,6);S.add(l1);
+var l2=new THREE.PointLight(0x9d6bff,1.5,40);l2.position.set(-6,-2,5);S.add(l2);
+
+function M(c,r){return new THREE.MeshStandardMaterial({color:c,roughness:r==null?.7:r})}
+function sph(r,c,x,y,z,sx,sy,sz){var m=new THREE.Mesh(new THREE.SphereGeometry(r,32,24),M(c));m.position.set(x,y,z);m.scale.set(sx||1,sy||1,sz||1);return m}
+
+// ---- Chat ----
+var chat=new THREE.Group(), FUR=0xf6d7c3, PINK=0xff9bb5, DARK=0x2a1636;
+var corps=sph(1.15,FUR,0,-1,0,1,1.05,.9); chat.add(corps);
+var ventre=sph(.8,0xfff0e6,0,-1.1,.55,1,1.1,.5); chat.add(ventre);
+var tete=new THREE.Group(); tete.position.set(0,.55,.2); chat.add(tete);
+tete.add(sph(1.05,FUR,0,0,0,1.12,.95,1));
+[-1,1].forEach(function(s){
+  var o=new THREE.Mesh(new THREE.ConeGeometry(.38,.7,4),M(FUR)); o.position.set(s*.72,.85,0); o.rotation.z=-s*.3; o.rotation.y=Math.PI/4; o.name='oreille'; tete.add(o);
+  var i=new THREE.Mesh(new THREE.ConeGeometry(.22,.45,4),M(PINK)); i.position.set(s*.72,.82,.1); i.rotation.z=-s*.3; i.rotation.y=Math.PI/4; tete.add(i);
+});
+var yeux=[]; [-1,1].forEach(function(s){
+  var e=sph(.15,DARK,s*.42,.1,.92,1,1.35,.6); tete.add(e); yeux.push(e);
+  tete.add(sph(.045,0xffffff,s*.42+.04,.2,1.02));
+  tete.add(sph(.17,PINK,s*.72,-.2,.82,1,.6,.4)).children;
+});
+tete.add(sph(.09,PINK,0,-.12,1.04,1.3,.9,.8));
+[-1,1].forEach(function(s){for(var k=-1;k<=1;k++){
+  var w=new THREE.Mesh(new THREE.CylinderGeometry(.012,.012,.8),M(0xffffff)); w.position.set(s*.95,-.22+k*.1,.85); w.rotation.z=Math.PI/2+s*k*.22; tete.add(w);}});
+[-1,1].forEach(function(s){chat.add(sph(.3,FUR,s*.5,-1.95,.7,1.1,.7,1.2))});
+var queue=[]; for(var q=0;q<7;q++){var b=sph(.2-q*.01,q>4?0xffc2d0:FUR,0,0,0); chat.add(b); queue.push(b);}
+chat.position.set(0,-.9,0); chat.scale.setScalar(1.05);
+S.add(chat);
+
+// ---- Cœur ----
+function forme(){var s=new THREE.Shape();s.moveTo(0,-1.6);
+s.bezierCurveTo(-.4,-1.1,-2.2,-.3,-2.2,.9);s.bezierCurveTo(-2.2,1.9,-1.2,2.5,-.5,2.3);s.bezierCurveTo(-.2,2.2,0,1.9,0,1.6);
+s.bezierCurveTo(0,1.9,.2,2.2,.5,2.3);s.bezierCurveTo(1.2,2.5,2.2,1.9,2.2,.9);s.bezierCurveTo(2.2,-.3,.4,-1.1,0,-1.6);return s}
+var gC=new THREE.ExtrudeGeometry(forme(),{depth:.9,bevelEnabled:true,bevelThickness:.45,bevelSize:.4,bevelSegments:10,curveSegments:32});gC.center();
+var coeur=new THREE.Mesh(gC,new THREE.MeshPhysicalMaterial({color:0xff2f6d,roughness:.22,clearcoat:1,emissive:0x5a0a28,emissiveIntensity:.6}));
+coeur.scale.setScalar(.5); coeur.position.set(0,3.3,0); S.add(coeur);
+var gM=gC.clone(); gM.scale(.1,.1,.1);
+
+// ---- Particules ----
+var N=500,P=new Float32Array(N*3),V=[];
+for(var i=0;i<N;i++){P[i*3]=(Math.random()-.5)*30;P[i*3+1]=(Math.random()-.5)*24;P[i*3+2]=(Math.random()-.5)*20-3;V.push(.15+Math.random()*.35)}
+var pg=new THREE.BufferGeometry();pg.setAttribute('position',new THREE.BufferAttribute(P,3));
+var pts=new THREE.Points(pg,new THREE.PointsMaterial({color:0xffb3c8,size:.07,transparent:true,opacity:.85,depthWrite:false}));S.add(pts);
+
+// ---- Mini-cœurs 3D ----
+var minis=[];
+function jaillir(n){for(var i=0;i<(n||12);i++){
+  var m=new THREE.Mesh(gM,new THREE.MeshStandardMaterial({color:i%2?0xff8fab:0xff2f6d,roughness:.3,transparent:true}));
+  m.position.set(chat.position.x,2.5,0.5);
+  m.userData={v:new THREE.Vector3((Math.random()-.5)*5,Math.random()*3+1,Math.random()*2),vie:1};S.add(m);minis.push(m)}}
+
+// ---- Emojis DOM ----
+function flotte(x,y,e){if(reduit)return;var s=document.createElement('span');s.className='fl';s.textContent=e;
+  s.style.left=x+'px';s.style.top=y+'px';s.style.setProperty('--dx',(Math.random()-.5)*140+'px');s.style.setProperty('--r',(Math.random()-.5)*90+'deg');
+  document.body.appendChild(s);setTimeout(function(){s.remove()},1700)}
+function pluie(list,n){if(reduit)return;for(var i=0;i<n;i++){(function(i){setTimeout(function(){var s=document.createElement('span');s.className='pl';
+  s.textContent=list[i%list.length];s.style.left=Math.random()*96+'vw';s.style.fontSize=(1.2+Math.random()*1.6)+'rem';
+  s.style.animationDuration=(2.5+Math.random()*2.5)+'s';document.body.appendChild(s);setTimeout(function(){s.remove()},5200)},i*90)})(i)}}
+
+// ---- Son (miaou synthétique) ----
+var AC=null;
+function miaou(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();var t=AC.currentTime;
+  var o=AC.createOscillator(),f=AC.createBiquadFilter(),g=AC.createGain();o.type='sawtooth';
+  o.frequency.setValueAtTime(520,t);o.frequency.linearRampToValueAtTime(900,t+.18);o.frequency.exponentialRampToValueAtTime(480,t+.6);
+  f.type='lowpass';f.frequency.setValueAtTime(1400,t);f.Q.value=4;
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.18,t+.08);g.gain.exponentialRampToValueAtTime(.001,t+.65);
+  o.connect(f);f.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+.7)}catch(e){}}
+
+// ---- Toast / compteur ----
+var toast=$('#toast'),tt;
+function dire(m){toast.textContent=m;toast.hidden=false;clearTimeout(tt);tt=setTimeout(function(){toast.hidden=true},2200)}
+var calins=0,ronron=0,saut=0,pulse=0,cible={x:0,y:0},sc=0;
+var mots={1:'Miaou ! 🐱',3:'Il t’adore déjà',6:'Il fait des yeux doux 🥹',10:'Ronron activé 😻',20:'Tu es officiellement sa personne préférée 💗'};
+function calin(x,y){calins++;saut=1;miaou();jaillir(6);
+  for(var i=0;i<4;i++)flotte(x+(Math.random()-.5)*40,y,['🐾','💗','🐱','✨'][i]);
+  if(mots[calins])dire(mots[calins]);
+  if(calins>=3)ronron=Math.max(ronron,4);
+  $('#hint').innerHTML='Câlins donnés : '+calins+' 🐾'}
+
+// ---- Interactions ----
+function pointeur(e){cible.x=(e.clientX/innerWidth-.5)*2;cible.y=(e.clientY/innerHeight-.5)*2}
+addEventListener('pointermove',pointeur);
+addEventListener('scroll',function(){sc=scrollY/Math.max(1,document.body.scrollHeight-innerHeight)},{passive:true});
+var ray=new THREE.Raycaster(),v2=new THREE.Vector2();
+$('#scene').addEventListener('pointerdown',function(e){pointeur(e);
+  v2.set(e.clientX/innerWidth*2-1,-(e.clientY/innerHeight)*2+1);ray.setFromCamera(v2,C);
+  if(ray.intersectObject(chat,true).length)calin(e.clientX,e.clientY);
+  else if(ray.intersectObject(coeur).length){pulse=1;jaillir(14);flotte(e.clientX,e.clientY,'💗')}
+  else flotte(e.clientX,e.clientY,'🐾')});
+document.querySelectorAll('[data-j]').forEach(function(b){b.addEventListener('click',function(){
+  var j=b.dataset.j;
+  if(j=='ronron'){ronron=8;miaou();dire('Prrrrrr… 😻')}
+  if(j=='coeurs'){pluie(['💗','💖','💕','🩷'],30);pulse=1;jaillir(16)}
+  if(j=='chats'){pluie(['🐈','🐱','😺','🐾','😻'],34);miaou()}
+  if(j=='saut'){saut=1;miaou();dire('Hop ! 🧶')}})});
+document.querySelectorAll('.carte').forEach(function(c){c.addEventListener('click',function(){c.classList.toggle('tourne');pulse=.6;var r=c.getBoundingClientRect();flotte(r.left+r.width/2,r.top+20,'💗')})});
+var btn=$('#ouvrir'),lettre=$('#lettre'),lt=$('#lt'),typed=false;
+btn.addEventListener('click',function(){var o=lettre.classList.toggle('ouverte');btn.setAttribute('aria-expanded',o);btn.textContent=o?'Fermer la lettre':'Ouvrir la lettre';
+  if(o){pulse=1;jaillir(14);miaou();if(!typed){typed=true;var txt=lt.dataset.texte,i=0;if(reduit){lt.textContent=txt}else{(function ecrire(){lt.textContent=txt.slice(0,++i);if(i<txt.length)setTimeout(ecrire,28)})()}}}});
+
+function taille(){R.setSize(innerWidth,innerHeight,false);C.aspect=innerWidth/innerHeight;C.fov=C.aspect<1?64:50;C.updateProjectionMatrix()}
+addEventListener('resize',taille);taille();
+
+var t0=performance.now(),nextBlink=2,blinkEnd=0;
+function boucle(now){
+  var t=(now-t0)/1000;
+  // chat : regarde le pointeur
+  tete.rotation.y+=(cible.x*.7-tete.rotation.y)*.1;
+  tete.rotation.x+=(cible.y*.4-tete.rotation.x)*.1;
+  tete.rotation.z=reduit?0:Math.sin(t*.8)*.04;
+  if(ronron>0){ronron-=.01;tete.position.y=.55+Math.sin(t*40)*.012}else tete.position.y=.55;
+  // clignement
+  if(t>nextBlink){blinkEnd=t+.12;nextBlink=t+2.5+Math.random()*3}
+  var cl=t<blinkEnd?.08:1;yeux.forEach(function(e){e.scale.y=1.35*cl});
+  // oreilles
+  tete.children.forEach(function(o){if(o.name=='oreille')o.rotation.x=Math.sin(t*3)*.05});
+  // saut
+  if(saut>0){saut=Math.max(0,saut-.03)}
+  chat.position.y=-.9+Math.sin(saut*Math.PI)*1.1+(reduit?0:Math.sin(t*1.6)*.03);
+  chat.rotation.y=Math.sin(t*.5)*.15+cible.x*.2;
+  // queue qui remue
+  queue.forEach(function(b,i){b.position.set(1.1+i*.28,-1.5+Math.sin(i*.5)*.2+i*.12,-.3);if(!reduit)b.position.y+=Math.sin(t*3+i*.6)*.12*(i/3)});
+  // cœur
+  var bat=1+Math.pow(Math.max(0,Math.sin(t*3.2)),6)*.07+pulse*.3;pulse*=.92;
+  coeur.scale.setScalar(.5*bat);coeur.position.y=3.3+(reduit?0:Math.sin(t*1.2)*.12);
+  if(!reduit)coeur.rotation.y=Math.sin(t*.6)*.7+cible.x*.4;
+  // décor
+  C.position.x+=(cible.x*.5-C.position.x)*.04;C.position.y+=(-cible.y*.3-C.position.y)*.04;C.lookAt(0,.6,0);
+  chat.position.z=-sc*3;coeur.position.z=-sc*3;chat.position.x=sc*-1.2;coeur.position.x=sc*-1.2;
+  if(!reduit){var p=pg.attributes.position.array;for(var i=0;i<N;i++){p[i*3+1]+=V[i]*.012;if(p[i*3+1]>12)p[i*3+1]=-12}pg.attributes.position.needsUpdate=true;pts.rotation.y=t*.02}
+  for(var j=minis.length-1;j>=0;j--){var m=minis[j];m.userData.vie-=.012;m.position.addScaledVector(m.userData.v,.016);m.userData.v.y-=.01;m.rotation.y+=.08;m.material.opacity=Math.max(0,m.userData.vie);
+    if(m.userData.vie<=0){S.remove(m);m.material.dispose();minis.splice(j,1)}}
+  R.render(S,C);requestAnimationFrame(boucle)}
+requestAnimationFrame(boucle);
+})();
+</script>
+</body>
+</html>
